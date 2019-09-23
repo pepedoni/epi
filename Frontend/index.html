@@ -1,0 +1,210 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link href="./node_modules/@mdi/roboto.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./node_modules/vuetify/dist/vuetify.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="./node_modules/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style">
+    <link href="./node_modules/material-design-icons-iconfont/dist/material-design-icons.css" rel="stylesheet" />
+    <title>E.P.I - SCAN </title>
+</head>
+
+<body>
+
+    <div id="app" dark="true">
+        <div>
+            <v-app>
+                <div class="text-right mt-3 mr-5">
+                    <v-bottom-sheet  >
+                        <template v-slot:activator="{ on }">
+
+                            <v-btn color="white teal--text" fab v-on="on">
+                                <v-icon > mdi-settings</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-sheet class="text-center pt-4" >
+                            <h1 class="teal--text font-weight-black headline mb-6">Configuração de Equipamentos Obrigatorios<h1>
+                            <div class="container">
+                            <div  class="item-list " v-for="equipamento in botoes" :key="equipamento.nome" @click="sheet = false">
+                                <div >
+                                  <img height="40px;" :src="equipamento.img" :alt="equipamento.nome">
+                                  <h3 class="subtitle-1">{{equipamento.name}}<h3>
+                                <p class="body-1 teal--text">{{equipamento.isRequired ? '  Ativado' : 'Desativado'}}</p> 
+                                  </div>
+                                <v-switch  class="ml-12"v-model="equipamento.isRequired" color="teal" ></v-switch>
+                              
+                            </div>
+                            </div>
+
+                        </v-sheet>
+    
+                    </v-bottom-sheet>
+                </div>
+                <div>
+                    <img class="cam" src="http://192.168.120.145:5000/video_feed">
+                </div>
+                <div class="botoes white--text">
+                    <div id="flex-container">
+                        <div class="item">
+                            <div>
+                            <img height="50px" src="img/human.png">
+                             </div>
+                            <v-chip v-bind:class="[ selected ]" :input-value="true" v-on:click="person.isSelected = !person.isSelected" filter>
+                                Pessoa
+                                <v-avatar v-if="true" right v-bind:class="[avatar_selected]">
+                                    <v-progress-circular v-if="isLoading" indeterminate :size="20" color="white"></v-progress-circular>
+                                    <spam v-if="!isLoading">{{person.count}} </spam>
+                                </v-avatar>
+                            </v-chip>
+                        </div>
+                        <div v-for="botao in botoes" class="item" v-if="botao.isRequired == true">
+                            <div>
+                            <img height="50px;" :src="botao.img">
+                            </div>
+                            <v-chip v-bind:class="[botao.erro  ? error :  selected ]" :input-value="true" filter v-bind:filter-icon="botao.erro ? minus : check">
+                                {{botao.name}}
+                                <v-avatar right v-bind:class="[botao.erro ? avatar_error : avatar_selected]">
+                                    <v-progress-circular v-if="isLoading" indeterminate :size="20" color="white"></v-progress-circular>
+                                    <spam v-if="!isLoading">{{botao.count}} </spam>
+                                </v-avatar>
+                            </v-chip>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div id="head">
+                    <img class="pebbian_logo" src="img/erp.png">
+                    <img class="tek_logo " src="img/tek.png">
+
+                </div>
+            </v-app>
+        </div>
+
+    </div>
+</body>
+<footer>
+</footer>
+
+<script src="./node_modules/vue/dist/vue.js"></script>
+<script src="./node_modules/axios/dist/axios.js"></script>
+<script src="./node_modules/vuetify/dist/vuetify.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: {
+            botoes: {
+                mascara: {
+                    name: "Mascara",
+                    isSelected: true,
+                    count: 0,
+                    erro: true,
+                    img: "img/mask.png",
+                    img_white: "img/mask_white.png",
+                    isRequired: true
+
+                },
+                luva: {
+                    name: "Luva",
+                    isSelected: true,
+                    count: 0,
+                    erro: true,
+                    img: "img/luvas.png", 
+                    img_white: "img/luvas_white.png", 
+                    isRequired: true
+
+                },
+                capacete: {
+                    name: "Capacete",
+                    isSelected: true,
+                    count: 0,
+                    erro: true,
+                    img: "img/helmet.png",
+                    img_white: "img/helmet_white.png",
+                    isRequired: true
+
+                },
+                touca: {
+                    name: "Touca",
+                    isSelected: true,
+                    count: 0,
+                    erro: true,
+                    img: "img/touca_descartavel.png",
+                    img_white: "img/touca_descartavel_white.png",
+                    isRequired: true
+
+                },
+            },
+            person: {
+                name: "Pessoa",
+                isSelected: true,
+                count: 0,
+                erro: true,
+                img: "img/human.png",
+                isRequired: false
+
+            },
+            equipamentos: "",
+            unselected: "teal darken-4 white--text ma-2",
+            error: "white deep-orange--text  ma-2",
+            avatar_error: "deep-orange  darken-1 white--text",
+            avatar_selected: "teal white--text",
+            selected: "white teal--text ma-2",
+            minus: "mdi-minus",
+            check: "mdi-check",
+            isLoading: true,
+            requests: []
+        },
+
+        watch: {
+            equipamentos: function(equipamentos) {
+                if (equipamentos) {
+                    for (var key in this.botao) {
+                        this.botao[key].count = 0;
+                        if (this.botao[key].isSelected) {
+                            for (let i = 0; i < equipamentos.length; i++) {
+                                if (equipamentos[i] === key) {
+                                    this.botao[key].count++;
+                                }
+                                this.botao[key].erro = this.botao[key].count > 0 ? false : true;
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        },
+
+        mounted() {
+            this.getObjects();
+
+        },
+
+        methods: {
+
+            getObjects() {
+                setInterval(() => {
+
+                    axios
+                        .get('http://192.168.120.145:5000/process_image')
+                        .then(response => {
+
+                            this.equipamentos = JSON.parse(response.data);
+                            this.isLoading = false;
+                        })
+
+                }, 3000);
+
+            }
+        }
+    });
+</script>
+</script>
+
+</html>
