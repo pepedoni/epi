@@ -1,0 +1,5 @@
+backend/resnet50_coco_best_v2.0.1.h5
+backend/epi.h5
+frontend/node_modules
+backend/image.jpg
+backend/image_trated.jpg
