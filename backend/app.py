@@ -47,8 +47,9 @@ def gen():
     # camera.processarCamera()
 
     while True:
-        camera.get_frame()
+        camera.get_frame(True)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.imagemJpeg + b'\r\n\r\n')
+
 
 app.run(host="0.0.0.0", debug=True)

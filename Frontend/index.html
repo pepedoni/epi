@@ -44,7 +44,7 @@
                     </v-bottom-sheet>
                 </div>
                 <div>
-                    <img class="cam" src="http://192.168.120.145:5000/video_feed">
+                    <img class="cam" src="http://127.0.0.1:5000/video_feed">
                 </div>
                 <div class="botoes white--text">
                     <div id="flex-container">
@@ -179,14 +179,14 @@
                 setInterval(() => {
 
                     axios
-                        .get('http://192.168.120.145:5000/process_image')
+                        .get('http://127.0.0.1:5000/process_image')
                         .then(response => {
 
                             this.equipamentos = JSON.parse(response.data);
                             this.isLoading = false;
                         })
 
-                }, 3000);
+                }, 800);
 
             }
         }
