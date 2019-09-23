@@ -68,7 +68,6 @@ class VideoCamera(object):
             self.lastImage = self.image
             cv2.imwrite("./image.jpg", self.lastImage)
             outPut = self.process_image()
-            print(outPut)
             self.trated_image = cv2.imread("./image_trated.jpg")
             ret, imagemJpeg = cv2.imencode('.jpg', self.trated_image)
 
