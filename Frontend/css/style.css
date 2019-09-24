@@ -3,9 +3,9 @@ html{
 }
 
 #head{
-    position: relative; 
+    position: fixed; 
     background-color: #49ab8b ;
-    height: 80px;
+    height : 15%;
     bottom: 0;
     width:100%;
   
@@ -37,7 +37,7 @@ body{
     background: #F5F5F5;
     transition: 0.3s;
     width : 50%;
-    height: 400px;
+    height: 60%;
     display: flex;
     margin-left: auto;
     margin-right: auto;
@@ -62,10 +62,11 @@ body{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding-top: 15px;
-    padding-bottom: 4%;
+    padding-top: 5%;
+    padding-bottom: 1%;
     width: 160%;
     margin-left : -30%;
+    height : 20%;
     
 
   
@@ -151,9 +152,16 @@ body{
 }
 
 .item-list {
-    padding-bottom: 5px;
+    padding-bottom: 1%;
     flex-grow: 1;
     text-align: center;
 }
 
+.bt {
+   margin-left : 35%;
+}
+
+.v-btn{
+    top: 4%;
+} 
 
