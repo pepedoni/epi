@@ -3,10 +3,8 @@ html{
 }
 
 #head{
-    position: fixed; 
     background-color: #49ab8b ;
     height : 15%;
-    bottom: 0;
     width:100%;
   
 }
@@ -37,10 +35,10 @@ body{
     background: #F5F5F5;
     transition: 0.3s;
     width : 50%;
+    height: auto;
     display: flex;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 1%;
     
 }
 
@@ -157,7 +155,7 @@ body{
 }
 
 .bt {
-   margin-left : 35%;
+   margin-left : 39%;
 }
 
 .v-btn{
