@@ -21,20 +21,21 @@
                     <v-bottom-sheet>
                         <template v-slot:activator="{ on }">
 
-                            <v-btn color="white teal--text" fab v-on="on">
-                                <v-icon> mdi-settings</v-icon>
+                            <v-btn color="white teal--text"  v-on="on">
+                                 Configurações 
+                                <v-icon right> mdi-settings</v-icon>
                             </v-btn>
                         </template>
                         <v-sheet class="text-center pt-4">
                             <h1 class="teal--text font-weight-black headline mb-6">Configuração de Equipamentos Obrigatórios<h1>
                             <div class="container">
                             <div  class="item-list " v-for="equipamento in botoes" :key="equipamento.name" @click="sheet = false" v-if="equipamento.name != 'Pessoa'">
-                                <div >
+                           
                                   <img height="40px;" :src="equipamento.img" :alt="equipamento.name">
                                   <h3 class="subtitle-1">{{equipamento.name}}<h3>
                                 <p class="body-1 teal--text">{{equipamento.isRequired ? '  Ativado' : 'Desativado'}}</p> 
-                                  </div>
-                                <v-switch  class="ml-12"v-model="equipamento.isRequired" color="teal" ></v-switch>
+                                <v-switch  class="bt" v-model="equipamento.isRequired" color="teal" ></v-switch>
+                               
 
                             </div>
                             </div>
@@ -44,11 +45,29 @@
                     </v-bottom-sheet>
                 </div>
                 <div>
-                    <img class="cam" src="http://127.0.0.1:5000/video_feed">
+                    <img class="cam" src="http://192.168.120.145:5000/video_feed">
                 </div>
                 <div class="botoes white--text">
+                      
+                    
                     <div id="flex-container">
-                        <div v-for="botao in botoes" class="item" v-if="botao.isRequired == true">
+                        
+                         <div  class="item">
+                            <div>
+                            <img height="50px;" :src="botoes.pessoa.img">
+                            </div>
+                            <v-chip v-bind:class="[selected ]" :input-value="true">
+                                {{botoes.pessoa.name}}
+                                <v-avatar right v-bind:class="[avatar_selected]">
+                                    <v-progress-circular v-if="isLoading" indeterminate :size="20" color="white"></v-progress-circular>
+                                    <span v-if="!isLoading">{{botoes.pessoa.count}} </span>
+                                </v-avatar>
+                            </v-chip>
+
+                        </div>
+                      
+                        
+                        <div v-for="botao in botoes" class="item" v-if="botao.isRequired == true && botao.name != 'Pessoa'">
                             <div>
                             <img height="50px;" :src="botao.img">
                             </div>
@@ -87,7 +106,7 @@
         vuetify: new Vuetify(),
         data: {
             botoes: {
-                person: {
+                pessoa: {
                 name: "Pessoa",
                 isSelected: true,
                 count: 0,
@@ -179,14 +198,14 @@
                 setInterval(() => {
 
                     axios
-                        .get('http://127.0.0.1:5000/process_image')
+                        .get('http://192.168.120.145:5000/process_image')
                         .then(response => {
 
                             this.equipamentos = JSON.parse(response.data);
                             this.isLoading = false;
                         })
 
-                }, 800);
+                }, 3000);
 
             }
         }
