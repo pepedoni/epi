@@ -41,16 +41,16 @@ def gen():
     global camera
 
     while True:
-        camera.get_frame(True)
+        camera.get_frame(False)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.imagemJpeg + b'\r\n\r\n')
 
 @app.route('/set_equipments', methods = ['POST'])
 def set_equipments():
-    data = request.form
-    print(data)
+    data = request.json
+    camera.setEquipments(data["equipments"])
     response = app.response_class(
-        response=json.dumps(data),
+        response=json.dumps(["OK"]),
         status=200,
         mimetype='application/json'
     )
