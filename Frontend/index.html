@@ -47,11 +47,11 @@
 
                     </v-bottom-sheet>
                 </div>
-                <div>
+                <div class="cont-cam">
                     <img class="cam" :src=url_cam>
                 </div>
                 <div class="botoes white--text">
-
+                    <div class="dezpt"></div>
                     <div id="flex-container">
 
                          <div  class="item">
@@ -212,7 +212,7 @@
                             this.equipamentos = JSON.parse(response.data);
                             this.isLoading = false;
                              getObjects();
-                        }), 1000);
+                        }), 700);
             }, 
 
             setIsRequired(required){
