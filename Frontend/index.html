@@ -165,6 +165,7 @@
             url_cam: "http://192.168.120.145:5000/video_feed", 
             url_post: "http://192.168.120.145:5000/set_equipments", 
             sheet: false,
+            isMounted: false,
             obrigatorios: []
         },
 
@@ -186,8 +187,14 @@
                 }
             }, 
             obrigatorios:  function(obrigatorios) {
-                this.setIsRequired(obrigatorios);
-                    axios.post(this.url_post, obrigatorios); 
+            this.setIsRequired(obrigatorios);
+            
+                if(this.isMounted){
+                    let equipamentos = {equipments: obrigatorios}
+                    let config = {headers: {"Content-Type": "application/json"}};
+                    axios.post(this.url_post, equipamentos, config); 
+                }
+                this.isMounted = true;
              }
 
         },
@@ -198,16 +205,15 @@
 
         methods: {
             getObjects() {
-                setInterval(() => {
                     axios
                         .get(this.url_get)
                         .then(response => {
-
                             this.equipamentos = JSON.parse(response.data);
                             this.isLoading = false;
+                             getObjects();
                         })
 
-                }, 3000);
+            
 
             }, 
 
