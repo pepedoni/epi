@@ -2,7 +2,7 @@ import cv2
 import uuid
 from torch.autograd import Variable
 import numpy as np
-from imageai.Detection.Custom import CustomObjectDetection
+from customEpiDetection import CustomObjectDetection
 import os
 
 class VideoCamera(object):
@@ -20,8 +20,6 @@ class VideoCamera(object):
 
     def __del__(self):
         self.video.release()
-    
-
 
     def process_image(self):
         try:
@@ -37,14 +35,14 @@ class VideoCamera(object):
                 self.detector.loadModel()
                 
                 detections = self.detector.detectObjectsFromImage(input_image="./image.jpg", output_image_path="./image_trated.jpg", minimum_percentage_probability=80, display_percentage_probability=False)
+                
+                self.detector.setEquipments(["pessoa", "capacete", "luva", "touca", "mascara"])
 
             else:
                 detections = self.detector.detectObjectsFromImage(input_image="./image.jpg", output_image_path="./image_trated.jpg", minimum_percentage_probability=80, display_percentage_probability=False)
 
             for eachObject in detections:
-                if(eachObject["percentage_probability"] > 75):
-                    print(eachObject["percentage_probability"])
-                    self.textOutput = self.textOutput + '"' + eachObject["name"] + '"' + ','
+                self.textOutput = self.textOutput + '"' + eachObject["name"] + '"' + ','
 
             self.textOutput = self.textOutput[:-1]
             if(len(self.textOutput) != 0): 
@@ -78,4 +76,7 @@ class VideoCamera(object):
             ret, imagemJpeg = cv2.imencode('.jpg', self.image)
 
         self.imagemJpeg = imagemJpeg.tobytes()
+
+    def setEquipments(self, equipments):
+        self.detector.setEquipments(equipments)
 

@@ -12,10 +12,6 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 camera = VideoCamera()
 imagemOriginal = None
                                                     
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify('pong!')
-
 @app.route('/process_image', methods=['GET'])
 def process_image():
     response = app.response_class(
@@ -43,13 +39,22 @@ def video_feed():
 
 def gen():
     global camera
-    
-    # camera.processarCamera()
 
     while True:
         camera.get_frame(True)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.imagemJpeg + b'\r\n\r\n')
+
+@app.route('/set_equipments', methods = ['POST'])
+def set_equipments():
+    data = request.form
+    print(data)
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 
 
 app.run(host="0.0.0.0", debug=True)
