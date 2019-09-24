@@ -161,9 +161,9 @@
             minus: "mdi-minus",
             check: "mdi-check",
             isLoading: true,
-            url_get : "http://192.168.120.145:5000/process_image",
-            url_cam: "http://192.168.120.145:5000/video_feed", 
-            url_post: "http://192.168.120.145:5000/set_equipments", 
+            url_get : "http://127.0.0.1:5000/process_image",
+            url_cam: "http://127.0.0.1:5000/video_feed", 
+            url_post: "http://127.0.0.1:5000/set_equipments", 
             sheet: false,
             isMounted: false,
             obrigatorios: []
@@ -204,17 +204,15 @@
         },
 
         methods: {
-            getObjects() {
+            getObjects() { 
+                setInterval( () =>
                     axios
                         .get(this.url_get)
                         .then(response => {
                             this.equipamentos = JSON.parse(response.data);
                             this.isLoading = false;
                              getObjects();
-                        })
-
-            
-
+                        }), 1000);
             }, 
 
             setIsRequired(required){

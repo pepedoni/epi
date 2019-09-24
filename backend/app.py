@@ -41,7 +41,7 @@ def gen():
     global camera
 
     while True:
-        camera.get_frame(False)
+        camera.get_frame(True)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.imagemJpeg + b'\r\n\r\n')
 
