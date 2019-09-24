@@ -4,3 +4,4 @@ frontend/node_modules
 backend/image.jpg
 backend/image_trated.jpg
 frontend/package-lock.json
+backend/__pycache__
