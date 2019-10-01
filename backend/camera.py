@@ -24,12 +24,11 @@ class VideoCamera(object):
         self.video.release()
 
 
-    def process_image(self):
+    def process_image(self, file_image):
         try:
             self.inProcess = True
             
             self.textOutput = "["
-            print(self.lastImage)
             if (self.detector is None):
                 self.detector = CustomObjectDetection()
                 self.detector.setModelTypeAsYOLOv3()
@@ -37,12 +36,18 @@ class VideoCamera(object):
                 self.detector.setJsonPath("epi_config.json") 
                 self.detector.loadModel()
                 
-                self.trated_image, detections = self.detector.detectObjectsFromImage(input_type="array", input_image=self.lastImage, output_type="array", minimum_percentage_probability=80, display_percentage_probability=False)
-                
+                if(file_image == False):
+                    self.trated_image, detections = self.detector.detectObjectsFromImage(input_type="array", input_image=self.lastImage, output_type="array", minimum_percentage_probability=80, display_percentage_probability=False)
+                else:
+                    detections = self.detector.detectObjectsFromImage(input_image="./image.jpg", output_image_path="./image_treated.jpg", minimum_percentage_probability=80, display_percentage_probability=False, thread_safe=True)
+
                 self.detector.setEquipments(["pessoa", "capacete", "luva", "touca", "mascara"])
 
             else:
-                self.trated_image, detections = self.detector.detectObjectsFromImage(input_type="array", input_image=self.lastImage, output_type="array", minimum_percentage_probability=80, display_percentage_probability=False)
+                if(file_image == False):
+                    self.trated_image, detections = self.detector.detectObjectsFromImage(input_type="array", input_image=self.lastImage, output_type="array", minimum_percentage_probability=80, display_percentage_probability=False)
+                else:
+                    detections = self.detector.detectObjectsFromImage(input_image="./image.jpg", output_image_path="./image_treated.jpg", minimum_percentage_probability=80, display_percentage_probability=False, thread_safe=True)
 
             for eachObject in detections:
                 self.textOutput = self.textOutput + '"' + eachObject["name"] + '"' + ','
@@ -68,13 +73,13 @@ class VideoCamera(object):
         if ( process_image is True ):
             if ( self.inProcess is False ):
                 self.lastImage = self.image
-                outPut = self.process_image()
+                outPut = self.process_image(False)
             ret, imagemJpeg = cv2.imencode('.jpg', self.trated_image)
 
         else:
-            if ( self.inProcess is False ) or ( self.first == True ):
+            if ( self.inProcess is False ):
                 self.lastImage = self.image
-                self.first = False
+                cv2.imwrite("./image.jpg", self.lastImage)
             ret, imagemJpeg = cv2.imencode('.jpg', self.image)
 
         self.imagemJpeg = imagemJpeg.tobytes()
