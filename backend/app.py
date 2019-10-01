@@ -11,7 +11,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 camera = VideoCamera()
 imagemOriginal = None
-treat_image = True
+treat_image = False
                                                     
 @app.route('/process_image', methods=['GET'])
 def process_image():
@@ -32,7 +32,8 @@ def genObjects():
             return output
     else: 
         if( treat_image == False ):
-            output = camera.process_image(process_treat_image)
+            print("to aquiii")
+            output = camera.process_image()
         else:
             return camera.lastTextOutput 
         return output

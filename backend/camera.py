@@ -10,7 +10,7 @@ class VideoCamera(object):
         # Using OpenCV to capture from device 0. If you have trouble capturing
         # from a webcam, comment the line below out and use a video file
         # instead.
-        self.video = cv2.VideoCapture(0)
+        self.video = cv2.VideoCapture(1)
         self.imagemJpeg = None
         self.lastImage  = None
         self.trated_image = None
@@ -18,6 +18,7 @@ class VideoCamera(object):
         self.execution_path = os.getcwd()
         self.inProcess  = False
         self.lastTextOutput = None
+        self.first = False
 
     def __del__(self):
         self.video.release()
@@ -28,7 +29,7 @@ class VideoCamera(object):
             self.inProcess = True
             
             self.textOutput = "["
-
+            print(self.lastImage)
             if (self.detector is None):
                 self.detector = CustomObjectDetection()
                 self.detector.setModelTypeAsYOLOv3()
@@ -57,7 +58,7 @@ class VideoCamera(object):
             return self.textOutput
         except Exception as e:
             self.inProcess = False
-            self.lastTextOutput = "[]"
+            self.lastTextOutput = None
             self.textOutput = "[]"
             raise e
     
@@ -71,8 +72,9 @@ class VideoCamera(object):
             ret, imagemJpeg = cv2.imencode('.jpg', self.trated_image)
 
         else:
-            if ( self.inProcess is False ):
+            if ( self.inProcess is False ) or ( self.first == True ):
                 self.lastImage = self.image
+                self.first = False
             ret, imagemJpeg = cv2.imencode('.jpg', self.image)
 
         self.imagemJpeg = imagemJpeg.tobytes()
