@@ -13,6 +13,7 @@ class VideoCamera(object):
         self.video = cv2.VideoCapture(0)
         self.imagemJpeg = None
         self.lastImage  = None
+        self.trated_image = None
         self.detector   = None
         self.execution_path = os.getcwd()
         self.inProcess  = False
@@ -20,6 +21,7 @@ class VideoCamera(object):
 
     def __del__(self):
         self.video.release()
+
 
     def process_image(self):
         try:
@@ -34,12 +36,12 @@ class VideoCamera(object):
                 self.detector.setJsonPath("epi_config.json") 
                 self.detector.loadModel()
                 
-                detections = self.detector.detectObjectsFromImage(input_image="./image.jpg", output_image_path="./image_trated.jpg", minimum_percentage_probability=80, display_percentage_probability=False)
+                self.trated_image, detections = self.detector.detectObjectsFromImage(input_type="array", input_image=self.lastImage, output_type="array", minimum_percentage_probability=80, display_percentage_probability=False)
                 
                 self.detector.setEquipments(["pessoa", "capacete", "luva", "touca", "mascara"])
 
             else:
-                detections = self.detector.detectObjectsFromImage(input_image="./image.jpg", output_image_path="./image_trated.jpg", minimum_percentage_probability=80, display_percentage_probability=False)
+                self.trated_image, detections = self.detector.detectObjectsFromImage(input_type="array", input_image=self.lastImage, output_type="array", minimum_percentage_probability=80, display_percentage_probability=False)
 
             for eachObject in detections:
                 self.textOutput = self.textOutput + '"' + eachObject["name"] + '"' + ','
@@ -63,16 +65,14 @@ class VideoCamera(object):
         self.success, self.image = self.video.read()
 
         if ( process_image is True ):
-            self.lastImage = self.image
-            cv2.imwrite("./image.jpg", self.lastImage)
-            outPut = self.process_image()
-            self.trated_image = cv2.imread("./image_trated.jpg")
+            if ( self.inProcess is False ):
+                self.lastImage = self.image
+                outPut = self.process_image()
             ret, imagemJpeg = cv2.imencode('.jpg', self.trated_image)
 
         else:
             if ( self.inProcess is False ):
                 self.lastImage = self.image
-                cv2.imwrite("./image.jpg", self.lastImage)
             ret, imagemJpeg = cv2.imencode('.jpg', self.image)
 
         self.imagemJpeg = imagemJpeg.tobytes()

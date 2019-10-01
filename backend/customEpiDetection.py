@@ -761,7 +761,7 @@ class CustomObjectDetection:
                 image = input_image
             else:
                 raise ValueError("input_type must be 'file' or 'array'. {} found".format(input_type))
-
+            
             image_frame = image.copy()
 
             height, width, channels = image.shape

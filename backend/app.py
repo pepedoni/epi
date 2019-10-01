@@ -11,6 +11,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 camera = VideoCamera()
 imagemOriginal = None
+treat_image = True
                                                     
 @app.route('/process_image', methods=['GET'])
 def process_image():
@@ -23,14 +24,17 @@ def process_image():
 
 def genObjects():
 
-    if( camera.inProcess is True):
+    if( camera.inProcess is True ):
         output = camera.lastTextOutput
         if(output is None):
             return "[]"
         else:
             return output
     else: 
-        output = camera.process_image()
+        if( treat_image == False ):
+            output = camera.process_image(process_treat_image)
+        else:
+            return camera.lastTextOutput 
         return output
 
 @app.route('/video_feed', methods=['GET'])
@@ -41,7 +45,7 @@ def gen():
     global camera
 
     while True:
-        camera.get_frame(True)
+        camera.get_frame(treat_image)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + camera.imagemJpeg + b'\r\n\r\n')
 
